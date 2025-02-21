@@ -3,31 +3,34 @@ program task_one
     integer, parameter :: n = 20
     real :: A(n, n), B(n), X(n)
     real :: P(3) = [1.0000000, 0.0156250, 0.0000000]
+    real :: A_original(n, n), B_original(n)
     integer :: i, j, k
-    real :: temp
 
     open(unit=10, file='RGEmtr094.dat', status='old')
     do i = 1, n
-        read(10, *) (A(i, j), j = 1, n)
+        read(10, *) (A_original(i, j), j = 1, n)
     end do
     close(10)
 
     open(unit=11, file='RGErhs094.dat', status='old')
     do i = 1, n
-        read(11, *) B(i)
+        read(11, *) B_original(i)
     end do
     close(11)
 
     do k = 1, 3
+        A = A_original
+        B = B_original
+
         A(1, 1) = A(1, 1) + P(k)
         B(1) = B(1) + 8 * P(k)
-    end do
 
-    call gaussian_method(n, A, B, X)
+        call gaussian_method(n, A, B, X)
 
-    print *, 'Solve system:'
-    do i = 1, n
-        print *, X(i)
+        print*, 'P = ', P(k)
+        do i = 1, n
+            print*, X(i)
+        end do
     end do
 
 contains
